@@ -10,3 +10,5 @@ Measure the time taken for the execution of system commands and record the perfo
 
 &nbsp;
 ## Detailed Reporting 
+
+![alt text](https://raw.githubusercontent.com/YajanaRao/Perftool/c8f43b01/site/images/PerformanceReport.png)
