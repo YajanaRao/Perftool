@@ -27,24 +27,24 @@ def getSystemInformation():
 
 
 def getPerfData():
-    dict={}
+    dictn={}
 
     available_memory = psutil.virtual_memory().percent
     used_disk = psutil.disk_usage('/').percent
-    dict['memory'] = available_memory
-    dict['disk'] = used_disk
-    dict['cpu'] = psutil.cpu_percent(interval=1)
-    dict['time'] = time.strftime("%H.%M.%S")
-    return dict
+    dictn['memory'] = available_memory
+    dictn['disk'] = used_disk
+    dictn['cpu'] = psutil.cpu_percent(interval=1)
+    dictn['time'] = time.strftime("%H.%M.%S")
+    return dictn
 
 def getProccessPerf(pid):
-    dict = {}
+    dictn = {}
     for proc in psutil.process_iter():
         if pid == proc.pid:
-            dict['cpu'] = proc.cpu_percent()
-            dict['memory'] = proc.memory_percent()
-            dict['time'] = time.strftime("%H.%M.%S")
-            return dict
+            dictn['cpu'] = proc.cpu_percent()
+            dictn['memory'] = proc.memory_percent()
+            dictn['time'] = time.strftime("%H.%M.%S")
+            return dictn
 
 def logger(name):
         formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s',
@@ -117,10 +117,10 @@ class PerformanceMonitor():
     def getData(self):
         global sys_matric
         global proc_matric
-        dict = {}
-        dict['System'] =  sys_matric
-        dict['Process'] = proc_matric
-        return dict
+        dictn = {}
+        dictn['System'] =  sys_matric
+        dictn['Process'] = proc_matric
+        return dictn
        
             
 def writePerfData(output_dir,matrix):
