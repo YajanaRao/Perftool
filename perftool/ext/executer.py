@@ -174,16 +174,16 @@ class ExecutionHandler():
 
     
 def execute(command):
-    dict = {}
+    dictn = {}
     perf = PerformanceMonitor()
     perf.start(os.getpid())
     p = subprocess.Popen([command], shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
                          stdin=subprocess.PIPE, universal_newlines=True)
     output = p.stdout.read()
     perf.stop()
-    dict['output'] = output
-    dict['perf'] = perf.getData()
-    return dict
+    dictn['output'] = output
+    dictn['perf'] = perf.getData()
+    return dictn
 
 
 
