@@ -184,7 +184,3 @@ def execute(command):
     dictn['output'] = output
     dictn['perf'] = perf.getData()
     return dictn
-
-
-
-
