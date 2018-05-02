@@ -93,8 +93,6 @@ class ExecutionInfo():
         else:
             print("SUCCESS")
 
-        end_time = datetime.now()
-
         print("Execution Started at {}".format(self.start_time))
         print("Execution Completed at {}".format(self.end_time))
 
