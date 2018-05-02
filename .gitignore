@@ -2,3 +2,5 @@
 *.zip
 *.tar.gz
 *.whl
+/dist/
+/*.egg-info/
