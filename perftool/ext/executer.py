@@ -21,7 +21,6 @@ class Logs():
     def __init__(self, output_dir,log_level):
         self.output_dir = output_dir
 
-
         if log_level == "DEBUG":
             self.log_level = logging.DEBUG
 
@@ -71,7 +70,7 @@ class Logs():
 
         # add ch to logger
         logger.addHandler(ch)
-
+        
         return logger
 
 
@@ -87,7 +86,6 @@ class ExecutionInfo():
 
         self.log = Logs(self.output_dir,log_level)
 
-
     def summary(self):
         if self.status:
             print("FAILED")
@@ -101,15 +99,11 @@ class ExecutionInfo():
         print("Execution Completed at {}".format(self.end_time))
 
         time_taken = self.end_time - self.start_time
-
         print("Total Time Taken {}".format(time_taken))
-
-        
 
         if self.output_dir:
             shutil.copy("C:\\Users\\Yajana\\Perftool\\Reporter\\index.html",self.output_dir)
             print("Reports are at {}".format(self.output_dir))
-
 
 
 class ExecutionHandler():
