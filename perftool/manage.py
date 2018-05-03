@@ -12,7 +12,7 @@ from ext.executer import ExecutionInfo, ExecutionHandler
 # shutil.copyfile(from_file,to_file)
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("command", help="Command to Execute")
+    parser.add_argument("command", help="Command to Execute", nargs='+')
     parser.add_argument("--DEBUG", help="Set Log level", action="store_true")
     parser.add_argument("--report", help="Generate Reports", type=bool)
     parser.add_argument("--duration", help="Duration of the Execution, Default is 5 minutes", type=int)
