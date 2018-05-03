@@ -1,6 +1,6 @@
 import sys,os
 
-from manage import interactive,main
+from perftool import interactive,main
 
 if __name__ == '__main__':
     if len(sys.argv) < 2:
