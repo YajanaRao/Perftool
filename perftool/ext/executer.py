@@ -177,7 +177,7 @@ def execute(command):
     dictn = {}
     perf = PerformanceMonitor()
     perf.start(os.getpid())
-    p = subprocess.Popen([command], shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
+    p = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
                          stdin=subprocess.PIPE, universal_newlines=True)
     output = p.stdout.read()
     perf.stop()
