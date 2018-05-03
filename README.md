@@ -1,5 +1,31 @@
 # Perftool
 The Performance Tool
+=========================================
+
+The ``perftool`` module helps Analyse the performance of command line execution.
+
+The goal of the ``perftool`` module is to allow you to understand the performance of any command line execution, it is compactable with Python 2 and 3.
+alongside a Python 2 stack of dependencies.
+
+It is designed to be used as follows:::
+
+	# Interactive console
+    python perftool 
+
+	# For Command execution
+	python perftool netstat
+
+	# Without reports
+	python perftool netstat --report False 
+
+	# For Debug
+	python perftool netstat --DEBUG
+
+	# For Multiword commands
+	python perftool "netstat -an"
+    
+
+
 
 Features
 Measure the time taken for the execution of system commands and record the performance while executing
