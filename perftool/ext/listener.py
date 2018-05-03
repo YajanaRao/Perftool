@@ -79,7 +79,12 @@ def logger(name):
         # add ch to logger
         logger.addHandler(ch)
         return logger
-
+    
+    
+global thread
+global sys_matric 
+global proc_matric
+    
 class PerformanceMonitor():
     global thread
     global sys_matric 
