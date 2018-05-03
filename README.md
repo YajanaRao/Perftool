@@ -1,5 +1,5 @@
 # Perftool
-The Performance Tool
+## The Performance Tool
 =========================================
 
 The ``perftool`` module helps Analyse the performance of command line execution.
