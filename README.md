@@ -18,3 +18,6 @@ Measure the time taken for the execution of system commands and record the perfo
 Example
 ![alt text](https://raw.githubusercontent.com/YajanaRao/Perftool/261d4034/site/images/PerformanceReport.png)
 
+# Environment
+Windows 10
+Ubuntu 16
