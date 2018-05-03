@@ -2,7 +2,10 @@
 include *.md
 
 # Include the license file
-include LICENSE.txt
+include LICENSE
+
+# Include HTML file
+include perftool/reporter/index.html
 
 # Include the data files
-recursive-include data * *.py
+#recursive-include reporter/ * *.py *.html
