@@ -16,7 +16,7 @@ def getSystemInformation():
     systemdict['Mechine'] = platform.machine()
     systemdict['Version'] = platform.version()
     systemdict['Platform'] = platform.platform()
-    systemdict['Name'] = platform.uname()
+    #systemdict['Name'] = platform.uname()
     systemdict['System'] = platform.system()
     systemdict['Processor'] = platform.processor()
     systemdict['User'] = psutil.users()[0].name
