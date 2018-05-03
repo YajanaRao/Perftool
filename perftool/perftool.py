@@ -29,6 +29,7 @@ def main():
 
     else:
         exe_info = ExecutionInfo(True, log_level)
+        exe_info.dir_path = os.path.dirname(os.path.realpath(__file__))
 
     if args.duration:
         exe_info.duration = args.duration
@@ -50,4 +51,3 @@ def interactive(command):
     execution = ExecutionHandler(exe_info)
     exe_info.end_time = datetime.now()
     exe_info.summary()
-
