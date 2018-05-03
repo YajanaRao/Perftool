@@ -81,11 +81,12 @@ def logger(name):
         return logger
     
     
-global thread
-global sys_matric 
-global proc_matric
+
     
 class PerformanceMonitor():
+    global thread
+    global sys_matric 
+    global proc_matric
     def __init__(self):
         self.flag = True
         self.log = logger(self.__class__.__name__)
