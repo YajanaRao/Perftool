@@ -100,7 +100,7 @@ class ExecutionInfo():
         print("Total Time Taken {}".format(time_taken))
 
         if self.output_dir:
-            shutil.copy(os.path.join(self.dir_path,"Reporter\\index.html"),self.output_dir)
+            shutil.copy(os.path.join(self.dir_path,"reporter\\index.html"),self.output_dir)
             print("Reports are at {}".format(self.output_dir))
 
 
