@@ -79,16 +79,14 @@ def logger(name):
         # add ch to logger
         logger.addHandler(ch)
         return logger
-    
-    
 
-    
 class PerformanceMonitor():
     global thread
     global sys_matric 
     global proc_matric
-    def __init__(self):
+    def __init__(self,live):
         self.flag = True
+        self.live = live
         self.log = logger(self.__class__.__name__)
 
     def start(self,pid):
@@ -111,11 +109,26 @@ class PerformanceMonitor():
         sys_matric = []
         proc_matric = []
         self.log.debug("Successfully Started")
-        while self.flag:
-            perf = getPerfData()
-            proc = getProccessPerf(pid)
-            sys_matric.append(perf)
-            proc_matric.append(proc)
+        if self.live:
+            httpserver = HttpServer()
+            httpserver.startServer()
+            while self.flag:
+                perf = getPerfData()
+                proc = getProccessPerf(pid)
+                updateProcessData(proc)
+                updateSystemData(perf)
+                sys_matric.append(perf)
+                proc_matric.append(proc)
+
+            httpserver.stopServer()
+
+        else:
+            while self.flag:
+                perf = getPerfData()
+                proc = getProccessPerf(pid)
+                sys_matric.append(perf)
+                proc_matric.append(proc)
+
 
     def getData(self):
         global sys_matric
@@ -124,12 +137,20 @@ class PerformanceMonitor():
         dictn['System'] =  sys_matric
         dictn['Process'] = proc_matric
         return dictn
-       
+
+def writeSystemInfo(output_dir):
+    data = getSystemInformation()
+    report_dir = os.path.join(output_dir, 'systemdata.csv')
+    with open(report_dir, 'w') as csv_file:  # just use 'w' mode in 3.x
+        writer = csv.writer(csv_file,lineterminator='\n')
+        writer.writerow(["System","Information"])
+        for key, value in data.items():
+            writer.writerow([key,value])
+    
             
 def writePerfData(output_dir,matrix):
     sys_matric = matrix['System']
     proc_matric = matrix['Process']
-    data = getSystemInformation()
     if output_dir:
         report_dir = os.path.join(output_dir, 'performancedata.csv')
         with open(report_dir, 'w') as csv_file:  # just use 'w' mode in 3.x
@@ -137,13 +158,7 @@ def writePerfData(output_dir,matrix):
             writer.writerow(["time","disk","memory","cpu"])
             for perf in sys_matric:
                 writer.writerow([perf['time'],perf['disk'],perf['memory'],perf['cpu']])
-
-        report_dir = os.path.join(output_dir, 'systemdata.csv')
-        with open(report_dir, 'w') as csv_file:  # just use 'w' mode in 3.x
-            writer = csv.writer(csv_file,lineterminator='\n')
-            writer.writerow(["System","Information"])
-            for key, value in data.items():
-                writer.writerow([key,value])
+        
 
         report_dir = os.path.join(output_dir, 'processdata.csv')
         with open(report_dir,'w') as csvfile:
@@ -155,13 +170,110 @@ def writePerfData(output_dir,matrix):
     else:
         print(data,sys_matric,proc_matric)
 
+try: 
+    from http.server import HTTPServer,BaseHTTPRequestHandler # Python 3
+except ImportError: 
+    from SimpleHTTPServer import BaseHTTPServer
+    HTTPServer = BaseHTTPServer.HTTPServer
+    from SimpleHTTPServer import SimpleHTTPRequestHandler as BaseHTTPRequestHandler # Python 2
 
+import webbrowser
+import json
+global proc_data
+global sys_data
+proc_data = {}
+sys_data = {}
+
+def http_logger(HTTPServer):
+    HTTPServer.log_message()
+    pass
+
+def updateProcessData(datas):
+    global proc_data
+    proc_data = datas
+
+def updateSystemData(datas):
+    global sys_data
+    sys_data = datas
+
+
+class Serve(BaseHTTPRequestHandler):
     
+    def log_message(self, format, *args):
+        pass
+
+    def do_GET(self):
+        if self.path == '/api/proc':
+            self.send_response(200)
+            self.send_header('Content-type', 'application/json')
+            self.end_headers()
+            try:
+                data = json.dumps(proc_data)
+                self.send_response(200)
+
+            except:
+                data = "Server down"
+                self.send_response(400)
+            try:
+                self.wfile.write(bytes(data).encode('utf-8'))
+
+            except:
+                self.wfile.write(bytes(data,'utf-8'))
+
+        if self.path == '/api/sys':
+            self.send_response(200)
+            self.send_header('Content-type', 'application/json')
+            self.end_headers()
+            try:
+                data = json.dumps(sys_data)
+                self.send_response(200)
+
+            except:
+                data = "Server down"
+                self.send_response(400)
+            try:
+                self.wfile.write(bytes(data).encode('utf-8'))
+
+            except:
+                self.wfile.write(bytes(data,'utf-8'))
+
+        if self.path == '/report':
+            self.send_response(200)
+            self.send_header('Content-type', 'text/html')
+            self.end_headers()
+            try:
+                report = open("C:/Users/Yajana/Documents/GitHub/Perftool/perftool/reporter/report.html")
+                self.send_response(200)
+
+            except:
+                report =  open("C:/Users/Yajana/Documents/GitHub/Perftool/perftool/reporter/index.html")
+                self.send_response(400)
+
+            try:
+                self.wfile.write(report.read().encode('utf-8'))
+            
+            except:
+                self.wfile.write(bytes(report.read(),'utf-8'))
 
 
 
-#perf = PerformanceMonitor()
-#perf.start(os.getpid)
-#time.sleep(5)
-#perf.stop()
-#perf.writePerfData(None)
+class HttpServer():
+    def __init__(self):
+        self.log = logger(self.__class__.__name__)
+        self.log.info("starting server")
+        self.httpd = HTTPServer(('0.0.0.0',8060),Serve)
+
+        url = "localhost/api"
+
+        
+   
+    def stopServer(self):
+        self.httpd.shutdown()
+
+    def startServer(self):
+         thread = threading.Thread(target=self.httpd.serve_forever,args=())
+         thread.start()
+         self.log.info("Server started")
+         new = 2
+         webbrowser.open('http://localhost:8060/report',new=2)
+

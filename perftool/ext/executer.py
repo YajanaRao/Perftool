@@ -9,7 +9,7 @@ import shutil
 import time
 from functools import reduce
 # Custom Modules
-from .listener import PerformanceMonitor, writePerfData
+from .listener import PerformanceMonitor, writePerfData,writeSystemInfo
 
 def get_output_dir():
     current_time = datetime.now()
@@ -78,11 +78,17 @@ class ExecutionInfo():
     def __init__(self,report=True, log_level="INFO"):
         self.start_time = datetime.now()  
         self.duration = 300
-        if report:
+        self.live = False
+        
+        if report != True:
+            self.output_dir = None
+
+        if report == "live":
+            self.live = True
             self.output_dir = get_output_dir()
 
         else:
-            self.output_dir = None
+            self.output_dir = get_output_dir()
 
         self.log = Logs(self.output_dir,log_level)
 
@@ -100,7 +106,7 @@ class ExecutionInfo():
         print("Total Time Taken {}".format(time_taken))
 
         if self.output_dir:
-            shutil.copy(os.path.join(self.dir_path,"reporter/index.html"),self.output_dir)
+            shutil.copy(os.path.join(self.dir_path,"Reporter/index.html"),self.output_dir)
             print("Reports are at {}".format(self.output_dir))
 
 
@@ -109,6 +115,7 @@ class ExecutionHandler():
         self.output_dir = exe_info.output_dir
         self.command = exe_info.command
         self.duration = exe_info.duration
+        self.live = exe_info.live
         self.log = exe_info.log.logger(self.__class__.__name__)
         exe_info.status = self.manage()
 
@@ -120,7 +127,7 @@ class ExecutionHandler():
         self.log.info("Duration {}".format(self.duration))
         try:
             pool = multiprocessing.Pool(processes=1)
-            result = pool.apply_async(execute, (self.command,))
+            result = pool.apply_async(execute, (self.command,self.live))
             pool.close()
             pool.join()
             output = result.get(timeout=self.duration)
@@ -134,6 +141,7 @@ class ExecutionHandler():
 
     def execution_log(self, output):
         if self.output_dir:
+            writeSystemInfo(self.output_dir)
             writePerfData(self.output_dir,output['perf'])
             log_dir = os.path.join(self.output_dir, "execution.log")
             with open(log_dir, "a") as f:
@@ -173,9 +181,9 @@ class ExecutionHandler():
                 print("________________________________")
 
     
-def execute(command):
+def execute(command,live):
     dictn = {}
-    perf = PerformanceMonitor()
+    perf = PerformanceMonitor(live)
     perf.start(os.getpid())
     p = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
                          stdin=subprocess.PIPE, universal_newlines=True)
