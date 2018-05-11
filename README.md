@@ -28,9 +28,9 @@ It is designed to be used as follows:::
 
 
 Features
-Measure the time taken for the execution of system commands and record the performance while executing
-HTML, CSV reports are genearated at the end
-Live reports can be seen on web by enabling live reporting feature mentioned above
+Measure the time taken for the execution of system commands and record the performance while executing.
+HTML, CSV reports are genearated at the end.
+Live reports can be seen on web by enabling live reporting feature mentioned above.
 
 ## Interactive console for instant report:
 
