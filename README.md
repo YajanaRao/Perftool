@@ -3,7 +3,6 @@
 The ``perftool`` module helps Analyse the performance of command line execution.
 
 The goal of the ``perftool`` module is to allow you to understand the performance of any command line execution, it is compactable with Python 2 and 3.
-alongside a Python 2 stack of dependencies.
 
 It is designed to be used as follows:::
 
@@ -21,12 +20,17 @@ It is designed to be used as follows:::
 
 	# For Multiword commands
 	python perftool "netstat -an"
+	
+	# For Live reporting
+	python perftool "jmeter -n -t test.jmx" --report live
     
 
 
 
 Features
 Measure the time taken for the execution of system commands and record the performance while executing
+HTML, CSV reports are genearated at the end
+Live reports can be seen on web by enabling live reporting feature mentioned above
 
 ## Interactive console for instant report:
 
