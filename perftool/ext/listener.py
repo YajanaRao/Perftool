@@ -112,6 +112,7 @@ class PerformanceMonitor():
         if self.live:
             httpserver = HttpServer()
             httpserver.startServer()
+            print("Server is running")
             while self.flag:
                 perf = getPerfData()
                 proc = getProccessPerf(pid)
@@ -168,7 +169,7 @@ def writePerfData(output_dir,matrix):
             for perf in proc_matric:
                 writer.writerow([perf['time'],perf['cpu'],perf['memory']])
     else:
-        print(data,sys_matric,proc_matric)
+        print(sys_matric,proc_matric)
 
 try: 
     from http.server import HTTPServer,BaseHTTPRequestHandler # Python 3

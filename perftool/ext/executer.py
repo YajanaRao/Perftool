@@ -79,11 +79,11 @@ class ExecutionInfo():
         self.start_time = datetime.now()  
         self.duration = 300
         self.live = False
-        
-        if report != True:
+        print(report)
+        if not bool(report) or "False" in report or "False" == report:
             self.output_dir = None
 
-        if report == "live":
+        elif report == "live":
             self.live = True
             self.output_dir = get_output_dir()
 
@@ -94,10 +94,11 @@ class ExecutionInfo():
 
     def summary(self):
         if self.status:
-            print("FAILED")
+            print("\t \033[1;31;40m FAILED \033[0m")
 
         else:
-            print("SUCCESS")
+            print("\t \033[1;32;40m SUCCESS \033[0m")
+
 
         print("Execution Started at {}".format(self.start_time))
         print("Execution Completed at {}".format(self.end_time))
@@ -106,6 +107,7 @@ class ExecutionInfo():
         print("Total Time Taken {}".format(time_taken))
 
         if self.output_dir:
+            #print(self.output_dir)
             shutil.copy(os.path.join(self.dir_path,"Reporter/index.html"),self.output_dir)
             print("Reports are at {}".format(self.output_dir))
 
@@ -132,7 +134,7 @@ class ExecutionHandler():
             pool.join()
             output = result.get(timeout=self.duration)
         except Exception as exp:
-            print(exp)
+            self.log.debug(exp)
             self.log.error("Execution did not completed in given period")
             return 1
         self.log.info("Terminal Execution Completed")
