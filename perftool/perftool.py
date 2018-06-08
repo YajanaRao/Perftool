@@ -15,7 +15,6 @@ def main():
     parser.add_argument("command", help="Command to Execute", nargs='+')
     parser.add_argument("--DEBUG", help="Set Log level", action="store_true")
     parser.add_argument("--report", help="Generate Reports")
-    parser.add_argument("--live",help="Live reporting",action="store_true")
     parser.add_argument("--duration", help="Duration of the Execution, Default is 5 minutes", type=int)
     args = parser.parse_args()
 
@@ -30,7 +29,6 @@ def main():
         exe_info.dir_path = os.path.dirname(os.path.realpath(__file__))
 
     else:
-        print(args.report)
         exe_info = ExecutionInfo(True, log_level)
         exe_info.dir_path = os.path.dirname(os.path.realpath(__file__))
 
