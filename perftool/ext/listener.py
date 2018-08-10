@@ -263,10 +263,6 @@ class HttpServer():
         self.log = logger(self.__class__.__name__)
         self.log.info("starting server")
         self.httpd = HTTPServer(('0.0.0.0',8060),Serve)
-
-        url = "localhost/api"
-
-        
    
     def stopServer(self):
         self.httpd.shutdown()
