@@ -1,16 +1,16 @@
-﻿<html>
+<html>
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.min.js"></script>
-    <script type="text/javascript" src="https://d3js.org/d3.v4.min.js"></script>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <script src="js/jquery.min.js"></script>
+    <script src="js/popper.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/Chart.bundle.js"></script>
+    <script src="js/Chart.bundle.min.js"></script>
+    <script src="js/Chart.js"></script>
+    <script src="js/Chart.min.js"></script>
+    <script type="text/javascript" src="js/d3.v4.min.js"></script>
 
     <style>
         td, th {
@@ -41,202 +41,7 @@
             <canvas id="processChart" width="800" height="500"></canvas>
         </div>
     </div>
-    <script>
-        function tabulate(data, columns) {
-            var table = d3.select('div.sys-table').append('table')
-            var thead = table.append('thead')
-            var tbody = table.append('tbody')
-
-            // Append header row
-            thead.append('tr').selectAll('th').data(columns).enter().append('th').text(function (column) { return column; });
-            d3.selectAll('table').classed("w3-table-all w3-hoverable", true)
-            // create a row for each object in the data
-            var rows = tbody.selectAll('tr')
-                .data(data)
-                .enter()
-                .append('tr');
-
-            // create a cell in each row for each column
-            var cells = rows.selectAll('td')
-                .data(function (row) {
-                    return columns.map(function (column) {
-                        return { column: column, value: row[column] };
-                    });
-                })
-                .enter()
-                .append('td')
-                .text(function (d) { return d.value; });
-
-            return table;
-        }
-
-        d3.csv("systemdata.csv", function (error, data) {
-            if (error) throw error;
-
-            tabulate(data, ['System', 'Information'])
-
-
-            // format the data
-            data.forEach(function (d) {
-                console.log(d)
-            });
-        });
-
-        d3.csv("performancedata.csv", function (error, data) {
-            if (error) throw error;
-
-
-            // get data
-            var time = []
-            var cpu = []
-            var memory = []
-            var disk = []
-            console.log(time)
-            data.forEach(function (d) {
-                time.push(d.time);
-                memory.push(d.memory);
-                disk.push(d.disk);
-                cpu.push(d.cpu)
-                console.log(d.time, d.disk, d.memory)
-            });
-            console.log(time, cpu, memory);
-            var ctx = document.getElementById("myChart").getContext('2d');
-            var myChart = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: time,
-                    datasets: [{
-                        label: '# CPU',
-                        data: cpu,
-                        backgroundColor: [
-                            'rgba(255, 99, 132, 0.2)'
-                        ],
-                        borderColor: [
-                            'rgba(255,99,132,1)'
-                        ],
-                        borderWidth: 1
-                    },
-                    {
-                        label: '# Memory',
-                        data: memory,
-                        backgroundColor: [
-                            'rgba(54, 162, 235, 0.2)'
-                        ],
-                        borderColor: [
-                            'rgba(54, 162, 235, 1)'
-                        ],
-                        borderWidth: 1
-                    },
-                    {
-                        label: '# Disk',
-                        data: disk,
-                        backgroundColor: [
-                            'rgba(255, 206, 86, 0.2)'
-                        ],
-                        borderColor: [
-                            'rgba(255, 206, 86, 1)'
-                        ],
-                        borderWidth: 1
-                    }
-                    ]
-                },
-                options: {
-                    responsive: false,
-                    scales: {
-                        yAxes: [{
-                            ticks: {
-                                max: 100,
-                                min: 0
-                            },
-                            scaleLabel: {
-                                display: true,
-                                labelString: 'Percentage (%) '
-                            },
-                        }],
-                        xAxes: [{
-
-                            scaleLabel: {
-                                display: true,
-                                labelString: 'Time'
-                            },
-                        }]
-                    }
-
-                }
-            });
-
-        });
-
-        d3.csv("processdata.csv", function (error, data) {
-            if (error) throw error;
-
-
-            // get data
-            var time = []
-            var cpu = []
-            var memory = []
-            console.log(time)
-            data.forEach(function (d) {
-                time.push(d.time);
-                memory.push(d.memory);
-                cpu.push(d.cpu)
-                console.log(d.time, d.cpu, d.memory)
-            });
-            console.log(time, cpu, memory);
-            var ctx = document.getElementById("processChart").getContext('2d');
-            var myChart = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: time,
-                    datasets: [{
-                        label: '# CPU',
-                        data: cpu,
-                        backgroundColor: [
-                            'rgba(255, 99, 132, 0.2)'
-                        ],
-                        borderColor: [
-                            'rgba(255,99,132,1)'
-                        ],
-                        borderWidth: 1
-                    },
-                    {
-                        label: '# Memory',
-                        data: memory,
-                        backgroundColor: [
-                            'rgba(54, 162, 235, 0.2)'
-                        ],
-                        borderColor: [
-                            'rgba(54, 162, 235, 1)'
-                        ],
-                        borderWidth: 1
-                    }
-                    ]
-                },
-                options: {
-                    responsive: false,
-                    scales: {
-                        yAxes: [{
-                            ticks: {
-                                max: 100,
-                                min: 0
-                            },
-                            scaleLabel: {
-                                display: true,
-                                labelString: 'Percentage (%)'
-                            },
-                        }],
-                        xAxes: [{
-                            scaleLabel: {
-                                display: true,
-                                labelString: 'Time'
-                            },
-                        }]
-                    }
-
-                }
-            });
-
-        });
-    </script>
+    <script src=js/perfmon.js></script>
+    
 </body>
 </html>
