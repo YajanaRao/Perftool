@@ -79,8 +79,8 @@ class ExecutionInfo():
         self.start_time = datetime.now()  
         self.duration = 300
         self.live = False
-        print(report)
-        if not bool(report) or "False" in report or "False" == report:
+
+        if not bool(report):
             self.output_dir = None
 
         elif report == "live":
@@ -109,6 +109,8 @@ class ExecutionInfo():
         if self.output_dir:
             #print(self.output_dir)
             shutil.copy(os.path.join(self.dir_path,"Reporter/index.html"),self.output_dir)
+            shutil.copytree(os.path.join(self.dir_path,"Reporter/css"), os.path.join(self.output_dir,"css"))
+            shutil.copytree(os.path.join(self.dir_path,"Reporter/js"), os.path.join(self.output_dir,"js"))
             print("Reports are at {}".format(self.output_dir))
 
 
