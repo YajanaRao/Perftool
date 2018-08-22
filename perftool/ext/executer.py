@@ -7,6 +7,7 @@ from datetime import datetime
 from colorlog import ColoredFormatter, getLogger
 import shutil
 import time
+import configparser
 from functools import reduce
 # Custom Modules
 from .listener import PerformanceMonitor, writePerfData,writeSystemInfo
@@ -76,6 +77,7 @@ class Logs():
 
 class ExecutionInfo():
     def __init__(self,report=True, log_level="INFO"):
+        self.get_defaults()
         self.start_time = datetime.now()  
         self.duration = 300
         self.live = False
@@ -91,6 +93,13 @@ class ExecutionInfo():
             self.output_dir = get_output_dir()
 
         self.log = Logs(self.output_dir,log_level)
+
+    def get_defaults(self):
+        config = configparser.RawConfigParser()
+        config.read('C:/Users/Yajana/Documents/GitHub/Perftool/perftool/config/defaults.ini')
+        print(config.sections())
+        log = config.get('log', 'log_level')
+        print(log)
 
     def summary(self):
         if self.status:
