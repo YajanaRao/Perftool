@@ -79,6 +79,7 @@ class ExecutionInfo():
     def __init__(self,report=""):
         self.get_defaults()
         self.start_time = datetime.now()
+
         if self.report and report == "False":
             self.output_dir = None
 
@@ -89,6 +90,7 @@ class ExecutionInfo():
         else:
             self.output_dir = get_output_dir()
 
+    def get_logger(self):
         self.log = Logs(self.output_dir,self.log_level)
 
     def get_defaults(self):
@@ -138,6 +140,7 @@ class ExecutionHandler():
         self.log.info("Started Terminal Execution")
         self.log.debug("Main Process Id {}".format(os.getpid()))
         self.log.info("Duration {}".format(self.execution.duration))
+        self.log.debug("Live report is {}".format(self.live))
         try:
             pool = multiprocessing.Pool(processes=1)
             result = pool.apply_async(execute, (self.execution.command,self.live))
