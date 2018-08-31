@@ -49,3 +49,9 @@ Example
 	Windows 10
 	Ubuntu 16
 	Ubuntu 17
+	
+# Steps to install
+	1. Clone the source code from github
+	2. cd to Perftool 
+	3. The the path in enviroment variable
+	4. Start executing
