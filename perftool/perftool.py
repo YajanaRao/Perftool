@@ -19,19 +19,17 @@ def main():
     parser.add_argument("--duration", help="Duration of the Execution, Default is 5 minutes", type=int)
     args = parser.parse_args()
 
-    if args.DEBUG:
-        log_level = "DEBUG"
-
-    else:
-        log_level = "INFO"
 
     if  args.report:
-        exe_info = ExecutionInfo(args.report, log_level)
+        exe_info = ExecutionInfo(args.report)
         exe_info.dir_path = os.path.dirname(os.path.realpath(__file__))
 
     else:
-        exe_info = ExecutionInfo(True, log_level)
+        exe_info = ExecutionInfo()
         exe_info.dir_path = os.path.dirname(os.path.realpath(__file__))
+
+    if args.DEBUG:
+        exe_info.log_level = "DEBUG"
 
     if args.duration:
         exe_info.duration = args.duration
@@ -47,10 +45,8 @@ def main():
 
 
 def interactive(command):
-    log_level = "WARN"
-    exe_info = ExecutionInfo(False, log_level)
+    exe_info = ExecutionInfo(False)
     exe_info.command = command
     execution = ExecutionHandler(exe_info)
     exe_info.end_time = datetime.now()
     exe_info.summary()
-

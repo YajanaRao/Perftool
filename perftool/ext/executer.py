@@ -31,7 +31,7 @@ class Logs():
         else:
             self.log_level = logging.INFO
 
-        
+
     def logger(self,name):
         formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s',
                                       datefmt='%m/%d/%Y %I:%M:%S %p')
@@ -71,35 +71,34 @@ class Logs():
 
         # add ch to logger
         logger.addHandler(ch)
-        
+
         return logger
 
 
 class ExecutionInfo():
-    def __init__(self,report=True, log_level="INFO"):
+    def __init__(self,report=""):
         self.get_defaults()
-        self.start_time = datetime.now()  
-        self.duration = 300
-        self.live = False
-
-        if not bool(report):
+        self.start_time = datetime.now()
+        if self.report and report == "False":
             self.output_dir = None
 
-        elif report == "live":
+        elif self.report or report == "live":
             self.live = True
             self.output_dir = get_output_dir()
 
         else:
             self.output_dir = get_output_dir()
 
-        self.log = Logs(self.output_dir,log_level)
+        self.log = Logs(self.output_dir,self.log_level)
 
     def get_defaults(self):
         config = configparser.RawConfigParser()
         config.read('C:/Users/Yajana/Documents/GitHub/Perftool/perftool/config/defaults.ini')
-        print(config.sections())
-        log = config.get('log', 'log_level')
-        print(log)
+        self.log_level = config.get('log', 'log_level')
+        self.report = config.get('reporting','reports')
+        self.live = config.get('reporting','live')
+        self.duration = config.get('duration','duration')
+
 
     def summary(self):
         if self.status:
@@ -125,25 +124,26 @@ class ExecutionInfo():
 
 class ExecutionHandler():
     def __init__(self,exe_info):
+        self.execution = exe_info
         self.output_dir = exe_info.output_dir
-        self.command = exe_info.command
-        self.duration = exe_info.duration
+        # self.command = exe_info.command
+        # self.duration = exe_info.duration
         self.live = exe_info.live
         self.log = exe_info.log.logger(self.__class__.__name__)
         exe_info.status = self.manage()
 
 
     def manage(self):
-        self.log.debug(self.command)
+        self.log.debug(self.execution.command)
         self.log.info("Started Terminal Execution")
         self.log.debug("Main Process Id {}".format(os.getpid()))
-        self.log.info("Duration {}".format(self.duration))
+        self.log.info("Duration {}".format(self.execution.duration))
         try:
             pool = multiprocessing.Pool(processes=1)
-            result = pool.apply_async(execute, (self.command,self.live))
+            result = pool.apply_async(execute, (self.execution.command,self.live))
             pool.close()
             pool.join()
-            output = result.get(timeout=self.duration)
+            output = result.get(timeout=self.execution.duration)
         except Exception as exp:
             self.log.debug(exp)
             self.log.error("Execution did not completed in given period")
@@ -190,10 +190,10 @@ class ExecutionHandler():
 
                 if disk:
                     print("\tDISK   : {}".format(reduce(lambda x, y: x + y, disk) / len(disk)))
-                
+
                 print("________________________________")
 
-    
+
 def execute(command,live):
     dictn = {}
     perf = PerformanceMonitor(live)
