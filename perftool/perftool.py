@@ -35,6 +35,7 @@ def main():
         exe_info.duration = args.duration
 
     if args.command:
+        exe_info.get_logger()
         exe_info.command = args.command
         execution = ExecutionHandler(exe_info)
         exe_info.end_time = datetime.now()

@@ -55,7 +55,7 @@ def logger(name):
 
         # create console handler and set level to debug
         ch = logging.StreamHandler()
-        ch.setLevel(logging.WARN)
+        ch.setLevel(logging.DEBUG)
 
 
 
@@ -109,7 +109,8 @@ class PerformanceMonitor():
         sys_matric = []
         proc_matric = []
         self.log.debug("Successfully Started")
-        if self.live == "True":
+        if str(self.live) == "True":
+            self.log.debug("live reporting is enabled")
             httpserver = HttpServer()
             httpserver.startServer()
             print("Server is running")
@@ -124,6 +125,7 @@ class PerformanceMonitor():
             httpserver.stopServer()
 
         else:
+            self.log.debug("Live reporting is disabled")
             while self.flag:
                 perf = getPerfData()
                 proc = getProccessPerf(pid)
