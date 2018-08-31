@@ -82,7 +82,7 @@ def logger(name):
 
 class PerformanceMonitor():
     global thread
-    global sys_matric 
+    global sys_matric
     global proc_matric
     def __init__(self,live):
         self.flag = True
@@ -94,14 +94,14 @@ class PerformanceMonitor():
         self.log.info("Starting the Monitor")
         thread = threading.Thread(target=self.getPerf,args=(pid,))
         thread.start()
-        
+
     def stop(self):
         self.flag = False
         self.log.info("Waiting for the thread to terminate")
         while thread.isAlive():
             time.sleep(0.1)
         self.log.info("Monitor Stopped")
-               
+
 
     def getPerf(self,pid):
         global sys_matric
@@ -109,7 +109,7 @@ class PerformanceMonitor():
         sys_matric = []
         proc_matric = []
         self.log.debug("Successfully Started")
-        if self.live:
+        if self.live == "True":
             httpserver = HttpServer()
             httpserver.startServer()
             print("Server is running")
@@ -147,8 +147,8 @@ def writeSystemInfo(output_dir):
         writer.writerow(["System","Information"])
         for key, value in data.items():
             writer.writerow([key,value])
-    
-            
+
+
 def writePerfData(output_dir,matrix):
     sys_matric = matrix['System']
     proc_matric = matrix['Process']
@@ -159,7 +159,7 @@ def writePerfData(output_dir,matrix):
             writer.writerow(["time","disk","memory","cpu"])
             for perf in sys_matric:
                 writer.writerow([perf['time'],perf['disk'],perf['memory'],perf['cpu']])
-        
+
 
         report_dir = os.path.join(output_dir, 'processdata.csv')
         with open(report_dir,'w') as csvfile:
@@ -171,9 +171,9 @@ def writePerfData(output_dir,matrix):
     else:
         print(sys_matric,proc_matric)
 
-try: 
+try:
     from http.server import HTTPServer,BaseHTTPRequestHandler # Python 3
-except ImportError: 
+except ImportError:
     from SimpleHTTPServer import BaseHTTPServer
     HTTPServer = BaseHTTPServer.HTTPServer
     from SimpleHTTPServer import SimpleHTTPRequestHandler as BaseHTTPRequestHandler # Python 2
@@ -199,7 +199,7 @@ def updateSystemData(datas):
 
 
 class Serve(BaseHTTPRequestHandler):
-    
+
     def log_message(self, format, *args):
         pass
 
@@ -252,7 +252,7 @@ class Serve(BaseHTTPRequestHandler):
 
             try:
                 self.wfile.write(report.read().encode('utf-8'))
-            
+
             except:
                 self.wfile.write(bytes(report.read(),'utf-8'))
 
@@ -263,7 +263,7 @@ class HttpServer():
         self.log = logger(self.__class__.__name__)
         self.log.info("starting server")
         self.httpd = HTTPServer(('0.0.0.0',8060),Serve)
-   
+
     def stopServer(self):
         self.httpd.shutdown()
 
@@ -273,4 +273,3 @@ class HttpServer():
          self.log.info("Server started")
          new = 2
          webbrowser.open('http://localhost:8060/report',new=2)
-
