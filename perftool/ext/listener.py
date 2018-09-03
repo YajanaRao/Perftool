@@ -134,7 +134,7 @@ class PerformanceMonitor():
             while self.flag:
                 perf = getPerfData()
                 proc = getProccessPerf(pid)
-                inflx.write_process_data(proc)
+                inflx.write_proces_data(proc)
                 inflx.write_system_data(perf)
 
         else:
