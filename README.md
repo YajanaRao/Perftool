@@ -52,7 +52,7 @@ Example
 	If influx database is enabled in defaults.ini file, System and Process data will be pushed to the influx. Using grafana you can generate live reports
 	
 Example
-![alt text](https://raw.githubusercontent.com/YajanaRao/Perftool/b52d3533/site/images/grafana.PNG)
+![alt text](https://raw.githubusercontent.com/YajanaRao/Perftool/master/site/images/grafana.png)
 
 ## Live Demo
 [Live Demo](https://snapshot.raintank.io/dashboard/snapshot/nKtU56QMx8aKbkYZBkiyx1OB1bbnNugg)
