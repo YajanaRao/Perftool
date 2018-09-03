@@ -45,8 +45,8 @@ If live reporting option is enable via defaults.ini or from command line paramet
 Example
 ![alt text](https://raw.githubusercontent.com/YajanaRao/Perftool/261d4034/site/images/PerformanceReport.png)
 
-## Live Demo
-[Live Demo](http://htmlpreview.github.io/?https://github.com/YajanaRao/Perftool/blob/master/site/2018-05-02_19-40-34/index.html)
+#### Live Demo
+[Default reporting](http://htmlpreview.github.io/?https://github.com/YajanaRao/Perftool/blob/master/site/2018-05-02_19-40-34/index.html)
 
 ### 2. Live reporting using Influx and Grafana
 If influx database is enabled in defaults.ini file, System and Process data will be pushed to the influx. Using grafana you can generate live reports
@@ -54,8 +54,8 @@ If influx database is enabled in defaults.ini file, System and Process data will
 Example
 ![alt text](https://raw.githubusercontent.com/YajanaRao/Perftool/master/site/images/grafana.png)
 
-## Live Demo
-[Live Demo](https://snapshot.raintank.io/dashboard/snapshot/nKtU56QMx8aKbkYZBkiyx1OB1bbnNugg)
+#### Live Demo
+[grafana snapshot](https://snapshot.raintank.io/dashboard/snapshot/nKtU56QMx8aKbkYZBkiyx1OB1bbnNugg)
 	
 # Environment
 	Windows 10
