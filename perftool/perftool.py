@@ -10,6 +10,7 @@ import argparse
 from ext.executer import ExecutionInfo, ExecutionHandler
 
 
+
 # shutil.copyfile(from_file,to_file)
 def main():
     parser = argparse.ArgumentParser()
@@ -19,14 +20,12 @@ def main():
     parser.add_argument("--duration", help="Duration of the Execution, Default is 5 minutes", type=int)
     args = parser.parse_args()
 
+    exe_info = ExecutionInfo()
+    exe_info.dir_path = os.path.dirname(os.path.realpath(__file__))
 
-    if  args.report:
-        exe_info = ExecutionInfo(args.report)
-        exe_info.dir_path = os.path.dirname(os.path.realpath(__file__))
 
-    else:
-        exe_info = ExecutionInfo()
-        exe_info.dir_path = os.path.dirname(os.path.realpath(__file__))
+    if args.report == "live":
+        exe_info.live = "True"
 
     if args.DEBUG:
         exe_info.log_level = "DEBUG"
@@ -35,6 +34,7 @@ def main():
         exe_info.duration = args.duration
 
     if args.command:
+        exe_info.get_defaults()
         exe_info.get_logger()
         exe_info.command = args.command
         execution = ExecutionHandler(exe_info)

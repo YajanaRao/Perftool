@@ -7,6 +7,7 @@ import csv
 import threading
 import logging
 from colorlog import ColoredFormatter, getLogger
+from .influxdbhandler import influx_writer
 
 
 
@@ -84,9 +85,10 @@ class PerformanceMonitor():
     global thread
     global sys_matric
     global proc_matric
-    def __init__(self,live):
+    def __init__(self,live,database):
         self.flag = True
         self.live = live
+        self.database = database
         self.log = logger(self.__class__.__name__)
 
     def start(self,pid):
@@ -113,7 +115,7 @@ class PerformanceMonitor():
             self.log.debug("live reporting is enabled")
             httpserver = HttpServer()
             httpserver.startServer()
-            print("Server is running")
+            self.log.debug("Server is running")
             while self.flag:
                 perf = getPerfData()
                 proc = getProccessPerf(pid)
@@ -123,6 +125,17 @@ class PerformanceMonitor():
                 proc_matric.append(proc)
 
             httpserver.stopServer()
+
+        if str(self.database) == "True":
+            self.log.debug("data will be pushed to database")
+            inflx = influx_writer()
+            inflx.create_datasource()
+            self.log.debug("Datasource created")
+            while self.flag:
+                perf = getPerfData()
+                proc = getProccessPerf(pid)
+                inflx.write_process_data(proc)
+                inflx.write_system_data(perf)
 
         else:
             self.log.debug("Live reporting is disabled")

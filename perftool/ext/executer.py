@@ -76,30 +76,26 @@ class Logs():
 
 
 class ExecutionInfo():
-    def __init__(self,report=""):
-        self.get_defaults()
+    def __init__(self):
         self.start_time = datetime.now()
 
-        if self.report and report == "False":
+    def get_logger(self):
+        if self.report == "False":
             self.output_dir = None
-
-        elif self.report or report == "live":
-            self.live = True
-            self.output_dir = get_output_dir()
 
         else:
             self.output_dir = get_output_dir()
 
-    def get_logger(self):
         self.log = Logs(self.output_dir,self.log_level)
 
     def get_defaults(self):
         config = configparser.RawConfigParser()
-        config.read('C:/Users/Yajana/Documents/GitHub/Perftool/perftool/config/defaults.ini')
+        config.read(os.path.join(self.dir_path,'config/defaults.ini'))
         self.log_level = config.get('log', 'log_level')
         self.report = config.get('reporting','reports')
         self.live = config.get('reporting','live')
         self.duration = config.get('duration','duration')
+        self.database = config.get('database','influx')
 
 
     def summary(self):
@@ -143,7 +139,7 @@ class ExecutionHandler():
         self.log.debug("Live report is {}".format(self.live))
         try:
             pool = multiprocessing.Pool(processes=1)
-            result = pool.apply_async(execute, (self.execution.command,self.live))
+            result = pool.apply_async(execute, (self.execution.command,self.live,self.execution.database))
             pool.close()
             pool.join()
             output = result.get(timeout=self.execution.duration)
@@ -197,9 +193,9 @@ class ExecutionHandler():
                 print("________________________________")
 
 
-def execute(command,live):
+def execute(command,live,database):
     dictn = {}
-    perf = PerformanceMonitor(live)
+    perf = PerformanceMonitor(live,database)
     perf.start(os.getpid())
     p = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
                          stdin=subprocess.PIPE, universal_newlines=True)
