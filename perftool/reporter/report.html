@@ -56,10 +56,10 @@
         var sysChart;
         ProcCharting();
         SysCharting();
-   
+
 
         function fetchProcData() {
-            $.getJSON("http://localhost:8060/api/proc", function (result) {
+            $.getJSON("http://localhost:5000/api/proc", function (result) {
                 console.log(result);
                 liveProcData(result);
             });
@@ -67,14 +67,14 @@
         }
 
         function fetchSysData() {
-            $.getJSON("http://localhost:8060/api/sys", function (result) {
+            $.getJSON("http://localhost:5000/api/sys", function (result) {
                 console.log(result);
                 liveSysData(result);
             });
         }
         //reporting();
 
-        
+
 
         function liveProcData(result) {
             console.log(result);
@@ -105,10 +105,10 @@
             console.log("Done");
         }
 
-  
-        
 
-       
+
+
+
 
         function ProcCharting() {
 
@@ -239,8 +239,8 @@
                 }
             });
         }
-        
-        
+
+
     </script>
 </body>
 </html>

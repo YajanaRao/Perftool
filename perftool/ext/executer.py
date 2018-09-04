@@ -91,7 +91,7 @@ class ExecutionInfo():
     def get_defaults(self):
         config = configparser.RawConfigParser()
         config.read(os.path.join(self.dir_path,'config/defaults.ini'))
-        self.log_level = config.get('log', 'log_level')
+        self.log_level = config.get('log', 'level')
         self.report = config.get('reporting','reports')
         self.live = config.get('reporting','live')
         self.duration = config.get('duration','duration')

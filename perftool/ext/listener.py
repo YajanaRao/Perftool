@@ -8,6 +8,7 @@ import threading
 import logging
 from colorlog import ColoredFormatter, getLogger
 from .influxdbhandler import influx_writer
+from .flaskapi import start_server,PerfData,stop_server
 
 
 
@@ -112,19 +113,27 @@ class PerformanceMonitor():
         proc_matric = []
         self.log.debug("Successfully Started")
         if str(self.live) == "True":
+            perfdata = PerfData()
+            server = threading.Thread(target=start_server,args=(perfdata,))
+            server.start()
             self.log.debug("live reporting is enabled")
-            httpserver = HttpServer()
-            httpserver.startServer()
+            # httpserver = HttpServer()
+            # httpserver.startServer()
             self.log.debug("Server is running")
             while self.flag:
                 perf = getPerfData()
                 proc = getProccessPerf(pid)
-                updateProcessData(proc)
-                updateSystemData(perf)
+                perfdata.set_system_data(perf)
+                perfdata.set_process_data(proc)
+            #     proc = getProccessPerf(pid)
+            #     updateProcessData(proc)
+            #     updateSystemData(perf)
                 sys_matric.append(perf)
                 proc_matric.append(proc)
+            #
+            # httpserver.stopServer()
 
-            httpserver.stopServer()
+            stop_server()
 
         if str(self.database) == "True":
             self.log.debug("data will be pushed to database")
@@ -186,105 +195,113 @@ def writePerfData(output_dir,matrix):
     else:
         print(sys_matric,proc_matric)
 
-try:
-    from http.server import HTTPServer,BaseHTTPRequestHandler # Python 3
-except ImportError:
-    from SimpleHTTPServer import BaseHTTPServer
-    HTTPServer = BaseHTTPServer.HTTPServer
-    from SimpleHTTPServer import SimpleHTTPRequestHandler as BaseHTTPRequestHandler # Python 2
-
-import webbrowser
-import json
-global proc_data
-global sys_data
-proc_data = {}
-sys_data = {}
-
-def http_logger(HTTPServer):
-    HTTPServer.log_message()
-    pass
-
-def updateProcessData(datas):
-    global proc_data
-    proc_data = datas
-
-def updateSystemData(datas):
-    global sys_data
-    sys_data = datas
-
-
-class Serve(BaseHTTPRequestHandler):
-
-    def log_message(self, format, *args):
-        pass
-
-    def do_GET(self):
-        if self.path == '/api/proc':
-            self.send_response(200)
-            self.send_header('Content-type', 'application/json')
-            self.end_headers()
-            try:
-                data = json.dumps(proc_data)
-                self.send_response(200)
-
-            except:
-                data = "Server down"
-                self.send_response(400)
-            try:
-                self.wfile.write(bytes(data).encode('utf-8'))
-
-            except:
-                self.wfile.write(bytes(data,'utf-8'))
-
-        if self.path == '/api/sys':
-            self.send_response(200)
-            self.send_header('Content-type', 'application/json')
-            self.end_headers()
-            try:
-                data = json.dumps(sys_data)
-                self.send_response(200)
-
-            except:
-                data = "Server down"
-                self.send_response(400)
-            try:
-                self.wfile.write(bytes(data).encode('utf-8'))
-
-            except:
-                self.wfile.write(bytes(data,'utf-8'))
-
-        if self.path == '/report':
-            self.send_response(200)
-            self.send_header('Content-type', 'text/html')
-            self.end_headers()
-            try:
-                report = open("C:/Users/Yajana/Documents/GitHub/Perftool/perftool/reporter/report.html")
-                self.send_response(200)
-
-            except:
-                report =  open("C:/Users/Yajana/Documents/GitHub/Perftool/perftool/reporter/index.html")
-                self.send_response(400)
-
-            try:
-                self.wfile.write(report.read().encode('utf-8'))
-
-            except:
-                self.wfile.write(bytes(report.read(),'utf-8'))
 
 
 
-class HttpServer():
-    def __init__(self):
-        self.log = logger(self.__class__.__name__)
-        self.log.info("starting server")
-        self.httpd = HTTPServer(('0.0.0.0',8060),Serve)
 
-    def stopServer(self):
-        self.httpd.shutdown()
+# try:
+#     from http.server import HTTPServer,BaseHTTPRequestHandler # Python 3
+# except ImportError:
+#     from SimpleHTTPServer import BaseHTTPServer
+#     HTTPServer = BaseHTTPServer.HTTPServer
+#     from SimpleHTTPServer import SimpleHTTPRequestHandler as BaseHTTPRequestHandler # Python 2
 
-    def startServer(self):
-         thread = threading.Thread(target=self.httpd.serve_forever,args=())
-         thread.start()
-         self.log.info("Server started")
-         new = 2
-         webbrowser.open('http://localhost:8060/report',new=2)
+# import webbrowser
+# import json
+# global proc_data
+# global sys_data
+# proc_data = {}
+# sys_data = {}
+
+# def http_logger(HTTPServer):
+#     HTTPServer.log_message()
+#     pass
+
+
+
+
+
+# def updateProcessData(datas):
+#     global proc_data
+#     proc_data = datas
+#
+# def updateSystemData(datas):
+#     global sys_data
+#     sys_data = datas
+#
+#
+# class Serve(BaseHTTPRequestHandler):
+#
+#     def log_message(self, format, *args):
+#         pass
+#
+#     def do_GET(self):
+#         if self.path == '/api/proc':
+#             self.send_response(200)
+#             self.send_header('Content-type', 'application/json')
+#             self.end_headers()
+#             try:
+#                 data = json.dumps(proc_data)
+#                 self.send_response(200)
+#
+#             except:
+#                 data = "Server down"
+#                 self.send_response(400)
+#             try:
+#                 self.wfile.write(bytes(data).encode('utf-8'))
+#
+#             except:
+#                 self.wfile.write(bytes(data,'utf-8'))
+#
+#         if self.path == '/api/sys':
+#             self.send_response(200)
+#             self.send_header('Content-type', 'application/json')
+#             self.end_headers()
+#             try:
+#                 data = json.dumps(sys_data)
+#                 self.send_response(200)
+#
+#             except:
+#                 data = "Server down"
+#                 self.send_response(400)
+#             try:
+#                 self.wfile.write(bytes(data).encode('utf-8'))
+#
+#             except:
+#                 self.wfile.write(bytes(data,'utf-8'))
+#
+#         if self.path == '/report':
+#             self.send_response(200)
+#             self.send_header('Content-type', 'text/html')
+#             self.end_headers()
+#             try:
+#                 report = open("C:/Users/Yajana/Documents/GitHub/Perftool/perftool/reporter/report.html")
+#                 self.send_response(200)
+#
+#             except:
+#                 report =  open("C:/Users/Yajana/Documents/GitHub/Perftool/perftool/reporter/index.html")
+#                 self.send_response(400)
+#
+#             try:
+#                 self.wfile.write(report.read().encode('utf-8'))
+#
+#             except:
+#                 self.wfile.write(bytes(report.read(),'utf-8'))
+#
+#
+#
+# class HttpServer():
+#     def __init__(self):
+#         self.log = logger(self.__class__.__name__)
+#         self.log.info("starting server")
+#         self.httpd = HTTPServer(('0.0.0.0',8060),Serve)
+#
+#     def stopServer(self):
+#         self.httpd.shutdown()
+#
+#     def startServer(self):
+#          thread = threading.Thread(target=self.httpd.serve_forever,args=())
+#          thread.start()
+#          self.log.info("Server started")
+#          new = 2
+#          webbrowser.open('http://localhost:8060/report',new=2)
