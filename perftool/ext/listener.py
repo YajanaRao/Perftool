@@ -3,12 +3,16 @@ import psutil
 import time
 import platform
 import os
+import sys
 import csv
 import threading
 import logging
 from colorlog import ColoredFormatter, getLogger
-from .influxdbhandler import influx_writer
-from .flaskapi import start_server,PerfData,stop_server
+
+sys.path.append('./reporter')
+
+from reporter.influxdbhandler import influx_writer
+from reporter.flaskapi import start_server,PerfData,stop_server
 
 
 
@@ -135,7 +139,7 @@ class PerformanceMonitor():
 
             stop_server()
 
-        if str(self.database) == "True":
+        elif str(self.database) == "True":
             self.log.debug("data will be pushed to database")
             inflx = influx_writer()
             inflx.create_datasource()
@@ -145,6 +149,8 @@ class PerformanceMonitor():
                 proc = getProccessPerf(pid)
                 inflx.write_process_data(proc)
                 inflx.write_system_data(perf)
+                sys_matric.append(perf)
+                proc_matric.append(proc)
 
         else:
             self.log.debug("Live reporting is disabled")

@@ -2,6 +2,11 @@ import sys,os
 
 from perftool import interactive,main
 
+from os import path
+import sys
+
+sys.path.append( path.dirname(path.abspath(path.dirname(__file__))) )
+
 if __name__ == '__main__':
     if len(sys.argv) < 2:
         print("\t \033[2;32;40m PERF\033[1;31;40mTOOL")
@@ -28,6 +33,3 @@ if __name__ == '__main__':
                 interactive(command)
     else:
         main()
-    
-
-    
