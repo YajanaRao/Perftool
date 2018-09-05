@@ -1,0 +1,47 @@
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <script src="js/jquery.min.js"></script>
+    <script src="js/popper.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/Chart.bundle.js"></script>
+    <script src="js/Chart.bundle.min.js"></script>
+    <script src="js/Chart.js"></script>
+    <script src="js/Chart.min.js"></script>
+    <script type="text/javascript" src="js/d3.v4.min.js"></script>
+
+    <style>
+        td, th {
+            padding: 1px 4px
+        }
+    </style>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <h1>Reports</h1>
+            </div>
+        </div>
+    </nav>
+
+    <div class="sys-table w3-responsive d-flex w3-padding-16"></div>
+    <div class="row">
+
+        <div class="col ">
+            <h3> CPU Over Time of System</h3>
+            <canvas id="myChart" width="800" height="500"></canvas>
+        </div>
+
+        <div class="col ">
+            <h3> CPU Over Time of Proccess</h3>
+            <canvas id="processChart" width="800" height="500"></canvas>
+        </div>
+    </div>
+    <script src=js/perfmon.js></script>
+    
+</body>
+</html>
