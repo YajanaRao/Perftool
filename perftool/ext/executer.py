@@ -91,7 +91,7 @@ class ExecutionInfo():
     def get_defaults(self):
         config = configparser.RawConfigParser()
         config.read(os.path.join(self.dir_path,'config/defaults.ini'))
-        self.log_level = config.get('log', 'log_level')
+        self.log_level = config.get('log', 'level')
         self.report = config.get('reporting','reports')
         self.live = config.get('reporting','live')
         self.duration = config.get('duration','duration')
@@ -114,9 +114,9 @@ class ExecutionInfo():
 
         if self.output_dir:
             #print(self.output_dir)
-            shutil.copy(os.path.join(self.dir_path,"Reporter/index.html"),self.output_dir)
-            shutil.copytree(os.path.join(self.dir_path,"Reporter/css"), os.path.join(self.output_dir,"css"))
-            shutil.copytree(os.path.join(self.dir_path,"Reporter/js"), os.path.join(self.output_dir,"js"))
+            shutil.copy(os.path.join(self.dir_path,"Reporter/templates/index.html"),self.output_dir)
+            shutil.copytree(os.path.join(self.dir_path,"Reporter/templates/css"), os.path.join(self.output_dir,"css"))
+            shutil.copytree(os.path.join(self.dir_path,"Reporter/templates/js"), os.path.join(self.output_dir,"js"))
             print("Reports are at {}".format(self.output_dir))
 
 
