@@ -14,6 +14,7 @@ class PerfData():
     def __init__(self):
         self.process = 0
         self.system = 0
+        self.network = 0
 
     def get_process_data(self):
         return self.process
@@ -26,6 +27,12 @@ class PerfData():
 
     def set_system_data(self,datas):
         self.system = datas
+
+    def set_network_data(self,datas):
+        self.network = datas
+
+    def get_network_data(self):
+        return self.network
 
 
 app = Flask(__name__)
@@ -44,9 +51,14 @@ class SystemServer(Resource):
     def get(self):
         return perfdata.get_system_data()
 
+class NetworkServer(Resource):
+    def get(self):
+        return perfdata.get_network_data()
+
 
 api.add_resource(ProcessServer, '/api/proc')
 api.add_resource(SystemServer, '/api/sys')
+api.add_resource(NetworkServer, '/api/net')
 
 @app.route('/shutdown', methods=['POST'])
 def shutdown():
