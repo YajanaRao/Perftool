@@ -210,7 +210,7 @@ function tabulate(data, columns) {
                 console.log(time, sent, recv);
                 var ctx = document.getElementById("networkChart").getContext('2d');
                 var myChart = new Chart(ctx, {
-                    type: 'line',
+                    type: 'bar',
                     data: {
                         labels: time,
                         datasets: [{
