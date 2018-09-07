@@ -58,6 +58,15 @@ class influx_writer():
         # print("Write points: {0}".format(json_body))
         self.client.write_points(json_body)
 
+    def write_network_data(self,data):
+        json_body = [
+            {
+                "measurement": "network",
+                "fields" : data
+            }
+        ]
+        self.client.write_points(json_body)
+
 # def main(, port=8086):
 
 #     query = 'select value from cpu_load_short;'

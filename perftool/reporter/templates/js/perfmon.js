@@ -192,4 +192,75 @@ function tabulate(data, columns) {
                 }
             });
 
+            d3.csv("networkdata.csv", function (error, data) {
+                if (error) throw error;
+
+
+                // get data
+                var time = []
+                var sent = []
+                var recv = []
+                console.log(time)
+                data.forEach(function (d) {
+                    time.push(d.time);
+                    sent.push(d.sent);
+                    recv.push(d.recv)
+                    console.log(d.time, d.cpu, d.memory)
+                });
+                console.log(time, sent, recv);
+                var ctx = document.getElementById("networkChart").getContext('2d');
+                var myChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: time,
+                        datasets: [{
+                            label: '# SENT',
+                            data: sent,
+                            backgroundColor: [
+                                'rgba(255, 99, 132, 0.2)'
+                            ],
+                            borderColor: [
+                                'rgba(255,99,132,1)'
+                            ],
+                            borderWidth: 1
+                        },
+                        {
+                            label: '# RECV',
+                            data: recv,
+                            backgroundColor: [
+                                'rgba(54, 162, 235, 0.2)'
+                            ],
+                            borderColor: [
+                                'rgba(54, 162, 235, 1)'
+                            ],
+                            borderWidth: 1
+                        }
+                        ]
+                    },
+                    options: {
+                        responsive: false,
+                        scales: {
+                            yAxes: [{
+                                // ticks: {
+                                //     max: 1,
+                                //     min: 0
+                                // },
+                                scaleLabel: {
+                                    display: true,
+                                    labelString: 'MB'
+                                },
+                            }],
+                            xAxes: [{
+                                scaleLabel: {
+                                    display: true,
+                                    labelString: 'Time'
+                                },
+                            }]
+                        }
+
+                    }
+                });
+
+            });
+
         });

@@ -52,6 +52,50 @@ def getProccessPerf(pid):
             dictn['time'] = time.strftime("%H.%M.%S")
             return dictn
 
+def get_interface():
+    counter = psutil.net_io_counters(pernic=True)
+    if "Ethernet" in counter:
+        return "Ethernet"
+    elif 'Wireless Network Connection' in counter:
+        return 'Wireless Network Connection'
+
+
+
+convertion = lambda total,time: (total / time) / 1000000
+
+def get_network_io(interface):
+    data = {}
+    counter=psutil.net_io_counters(pernic=True)[interface]
+    data['sent'] = counter.bytes_sent
+    data['recv'] = counter.bytes_recv
+    return data
+
+def average (lists,key):
+    total = 0
+    for item in lists:
+        total = item[key]
+    return total/len(lists)
+
+def network_collector():
+    dictn = {}
+    interface = get_interface()
+    t0 = time.time()
+    t1 = time.time()
+    data = []
+    while int(t1-t0) < 1:
+        counter = get_network_io(interface)
+        data.append(counter)
+        t1 = time.time()
+    t = t1-t0
+    # print(t)
+
+    avg_sent = average(data,'sent')
+    avg_recv = average(data,'recv')
+    dictn['recv'] = convertion(avg_sent,t)
+    dictn['sent'] = convertion(avg_recv,t)
+    dictn['time'] = time.strftime("%H.%M.%S")
+    return dictn
+
 def logger(name):
         formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s',
                                       datefmt='%m/%d/%Y %I:%M:%S %p')
@@ -90,6 +134,7 @@ class PerformanceMonitor():
     global thread
     global sys_matric
     global proc_matric
+    global net_matric
     def __init__(self,live,database):
         self.flag = True
         self.live = live
@@ -113,8 +158,10 @@ class PerformanceMonitor():
     def getPerf(self,pid):
         global sys_matric
         global proc_matric
+        global net_matric
         sys_matric = []
         proc_matric = []
+        net_matric = []
         self.log.debug("Successfully Started")
         if str(self.live) == "True":
             perfdata = PerfData()
@@ -124,16 +171,20 @@ class PerformanceMonitor():
             # httpserver = HttpServer()
             # httpserver.startServer()
             self.log.debug("Server is running")
+            self.log.debug("Server flag {}".format(self.flag))
             while self.flag:
                 perf = getPerfData()
                 proc = getProccessPerf(pid)
+                nets = network_collector()
                 perfdata.set_system_data(perf)
                 perfdata.set_process_data(proc)
+                perfdata.set_network_data(nets)
             #     proc = getProccessPerf(pid)
             #     updateProcessData(proc)
             #     updateSystemData(perf)
                 sys_matric.append(perf)
                 proc_matric.append(proc)
+                net_matric.append(nets)
             #
             # httpserver.stopServer()
 
@@ -144,29 +195,38 @@ class PerformanceMonitor():
             inflx = influx_writer()
             inflx.create_datasource()
             self.log.debug("Datasource created")
+            self.log.debug(self.flag)
             while self.flag:
                 perf = getPerfData()
                 proc = getProccessPerf(pid)
+                nets = network_collector()
                 inflx.write_process_data(proc)
                 inflx.write_system_data(perf)
+                inflx.write_network_data(nets)
                 sys_matric.append(perf)
                 proc_matric.append(proc)
+                net_matric.append(nets)
+
 
         else:
             self.log.debug("Live reporting is disabled")
             while self.flag:
                 perf = getPerfData()
                 proc = getProccessPerf(pid)
+                nets = network_collector()
                 sys_matric.append(perf)
                 proc_matric.append(proc)
+                net_matric.append(nets)
 
 
     def getData(self):
         global sys_matric
         global proc_matric
+        global net_matric
         dictn = {}
         dictn['System'] =  sys_matric
         dictn['Process'] = proc_matric
+        dictn['Network'] = net_matric
         return dictn
 
 def writeSystemInfo(output_dir):
@@ -182,6 +242,7 @@ def writeSystemInfo(output_dir):
 def writePerfData(output_dir,matrix):
     sys_matric = matrix['System']
     proc_matric = matrix['Process']
+    net_matric = matrix['Network']
     if output_dir:
         report_dir = os.path.join(output_dir, 'performancedata.csv')
         with open(report_dir, 'w') as csv_file:  # just use 'w' mode in 3.x
@@ -198,8 +259,17 @@ def writePerfData(output_dir,matrix):
 
             for perf in proc_matric:
                 writer.writerow([perf['time'],perf['cpu'],perf['memory']])
+
+        report_dir = os.path.join(output_dir, 'networkdata.csv')
+        with open(report_dir,'w') as csv_file:
+            writer = csv.writer(csv_file,lineterminator='\n')
+            writer.writerow(["sent","recv"])
+
+            for net in net_matric:
+                writer.writerow([net["sent"],net["recv"]])
+
     else:
-        print(sys_matric,proc_matric)
+        print(sys_matric,proc_matric,net_matric)
 
 
 

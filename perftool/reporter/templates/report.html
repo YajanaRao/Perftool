@@ -1,5 +1,6 @@
 ﻿<html>
 <head>
+  <title> Perftool</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css">
@@ -38,24 +39,31 @@
 
         <div class="col centre">
             <h3> CPU Over Time of Process</h3>
-            <canvas id="procChart" width="1200" height="600"></canvas>
+            <canvas id="procChart" width="800" height="500"></canvas>
         </div>
 
         <div class="col centre">
             <h3> CPU Over Time of System</h3>
-            <canvas id="sysChart" width="1200" height="600"></canvas>
+            <canvas id="sysChart" width="800" height="500"></canvas>
         </div>
 
+        <div class="col ">
+            <h3> Network Over Time</h3>
+            <canvas id="netChart" width="800" height="500"></canvas>
+        </div>
     </div>
     <script>
         setInterval(function () {
             fetchProcData();
             fetchSysData();
+            fetchNetData();
         }, 2000);
         var procChart;
         var sysChart;
+        var netChart;
         ProcCharting();
         SysCharting();
+        netCharting();
 
 
         function fetchProcData() {
@@ -74,6 +82,13 @@
         }
         //reporting();
 
+        function fetchNetData(){
+          $.getJSON("http://localhost:5000/api/net", function (result) {
+              console.log(result);
+              liveNetData(result);
+          });
+        }
+
 
 
         function liveProcData(result) {
@@ -88,6 +103,12 @@
             updateSysData(result.time, result.cpu, result.memory, result.disk);
         }
 
+        function liveNetData(result){
+          console.log(result);
+          console.log(result.time,result.sent,result.recv);
+          updateNetData(result.time,result.sent,result.recv);
+        }
+
         function updateProcData(time,cpu,memory) {
             procChart.data.labels.push(time);
             procChart.data.datasets[0].data.push(cpu);
@@ -100,9 +121,17 @@
             sysChart.data.labels.push(time);
             sysChart.data.datasets[0].data.push(cpu);
             sysChart.data.datasets[1].data.push(memory);
-            sysChart.data.datasets[2].data.push(disk)
+            sysChart.data.datasets[2].data.push(disk);
             sysChart.update();
             console.log("Done");
+        }
+
+        function updateNetData(time,sent,recv){
+          netChart.data.labels.push(time);
+          netChart.data.datasets[0].data.push(sent);
+          netChart.data.datasets[1].data.push(recv);
+          netChart.update();
+          console.log("Done");
         }
 
 
@@ -240,6 +269,64 @@
             });
         }
 
+        function netCharting() {
+
+
+            //console.log(time, cpu, memory);
+            var ctx = document.getElementById("netChart").getContext('2d');
+            netChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: 0,
+                    datasets: [{
+                        label: '# SENT',
+                        data: 0,
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.2)'
+                        ],
+                        borderColor: [
+                            'rgba(255,99,132,1)'
+                        ],
+                        borderWidth: 1
+                    },
+                    {
+                        label: '# RECV',
+                        data: 0,
+                        backgroundColor: [
+                            'rgba(54, 162, 235, 0.2)'
+                        ],
+                        borderColor: [
+                            'rgba(54, 162, 235, 1)'
+                        ],
+                        borderWidth: 1
+                    }
+                    ]
+                },
+                options: {
+                    responsive: false,
+                    scales: {
+                        yAxes: [{
+                            // ticks: {
+                            //     max: 100,
+                            //     min: 0
+                            // },
+                            scaleLabel: {
+                                display: true,
+                                labelString: 'BYTES '
+                            },
+                        }],
+                        xAxes: [{
+
+                            scaleLabel: {
+                                display: true,
+                                labelString: 'Time'
+                            },
+                        }]
+                    }
+
+                }
+            });
+          }
 
     </script>
 </body>
