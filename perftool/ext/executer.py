@@ -167,6 +167,8 @@ class ExecutionHandler():
                 cpu = []
                 memory = []
                 disk = []
+                network_sent = []
+                network_recv = []
                 for val in item:
                     #print(val)
                     for key,value in val.items():
@@ -180,6 +182,12 @@ class ExecutionHandler():
                         if "disk" in key:
                             disk.append(value)
 
+                        if "sent" in key:
+                            network_sent.append(value)
+
+                        if "recv" in key:
+                            network_recv.append(value)
+
                 #print(cpu,disk,memory)
                 if cpu:
                     print("\tCPU    : {}".format(reduce(lambda x, y: x + y, cpu) / len(cpu)))
@@ -189,6 +197,12 @@ class ExecutionHandler():
 
                 if disk:
                     print("\tDISK   : {}".format(reduce(lambda x, y: x + y, disk) / len(disk)))
+
+                if network_sent:
+                    print("\tBYTES SENT   : {}".format(reduce(lambda x, y: x + y, network_sent) / len(network_sent)))
+
+                if network_recv:
+                    print("\tBYTES RECV   : {}".format(reduce(lambda x, y: x + y, network_recv) / len(network_recv)))
 
                 print("________________________________")
 

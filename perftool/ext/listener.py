@@ -147,7 +147,6 @@ class PerformanceMonitor():
         thread.start()
 
     def stop(self):
-        time.sleep(10)
         self.flag = False
         self.log.info("Waiting for the thread to terminate")
         while thread.isAlive():
@@ -171,7 +170,7 @@ class PerformanceMonitor():
             # httpserver = HttpServer()
             # httpserver.startServer()
             self.log.debug("Server is running")
-            self.log.debug(self.flag)
+            self.log.debug("Server flag {}".format(self.flag))
             while self.flag:
                 perf = getPerfData()
                 proc = getProccessPerf(pid)
@@ -202,10 +201,10 @@ class PerformanceMonitor():
                 nets = network_collector()
                 inflx.write_process_data(proc)
                 inflx.write_system_data(perf)
+                inflx.write_network_data(nets)
                 sys_matric.append(perf)
                 proc_matric.append(proc)
                 net_matric.append(nets)
-                self.log.debug("no issues")
 
 
         else:
@@ -259,6 +258,15 @@ def writePerfData(output_dir,matrix):
 
             for perf in proc_matric:
                 writer.writerow([perf['time'],perf['cpu'],perf['memory']])
+
+        report_dir = os.path.join(output_dir, 'networkdata.csv')
+        with open(report_dir,'w') as csv_file:
+            writer = csv.writer(csv_file,lineterminator='\n')
+            writer.writerow(["sent","recv"])
+
+            for net in net_matric:
+                writer.writerow([net["sent"],net["recv"]])
+
     else:
         print(sys_matric,proc_matric)
 
