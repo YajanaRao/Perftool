@@ -51,11 +51,12 @@ def getProccessPerf(pid):
             dictn['memory'] = proc.memory_percent()
             dictn['time'] = time.strftime("%H.%M.%S")
             return dictn
+
 def get_interface():
     counter = psutil.net_io_counters(pernic=True)
     if "Ethernet" in counter:
         return "Ethernet"
-    else:
+    elif 'Wireless Network Connection' in counter:
         return 'Wireless Network Connection'
 
 
@@ -69,11 +70,11 @@ def get_network_io(interface):
     data['recv'] = counter.bytes_recv
     return data
 
-def average (list,key):
+def average (lists,key):
     total = 0
-    for item in list:
+    for item in lists:
         total = item[key]
-    return total/len(list)
+    return total/len(lists)
 
 def network_collector():
     dictn = {}
@@ -268,7 +269,7 @@ def writePerfData(output_dir,matrix):
                 writer.writerow([net["sent"],net["recv"]])
 
     else:
-        print(sys_matric,proc_matric)
+        print(sys_matric,proc_matric,net_matric)
 
 
 
