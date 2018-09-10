@@ -116,9 +116,9 @@ class ExecutionInfo():
 
         if self.output_dir:
             #print(self.output_dir)
-            shutil.copy(os.path.join(self.dir_path,"Reporter/templates/index.html"),self.output_dir)
-            shutil.copytree(os.path.join(self.dir_path,"Reporter/templates/css"), os.path.join(self.output_dir,"css"))
-            shutil.copytree(os.path.join(self.dir_path,"Reporter/templates/js"), os.path.join(self.output_dir,"js"))
+            shutil.copy(os.path.join(self.dir_path,"reporter/templates/index.html"),self.output_dir)
+            shutil.copytree(os.path.join(self.dir_path,"reporter/templates/css"), os.path.join(self.output_dir,"css"))
+            shutil.copytree(os.path.join(self.dir_path,"reporter/templates/js"), os.path.join(self.output_dir,"js"))
             print("Reports are at {}".format(self.output_dir))
 
 
