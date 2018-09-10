@@ -1,0 +1,7 @@
+future
+colorlog
+psutil
+configparser
+influxdb
+flask_restful
+flask
