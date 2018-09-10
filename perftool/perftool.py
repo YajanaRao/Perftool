@@ -46,7 +46,10 @@ def main():
 
 
 def interactive(command):
-    exe_info = ExecutionInfo(False)
+    exe_info = ExecutionInfo()
+    exe_info.dir_path = os.path.dirname(os.path.realpath(__file__))
+    exe_info.get_defaults()
+    exe_info.get_logger()
     exe_info.command = command
     execution = ExecutionHandler(exe_info)
     exe_info.end_time = datetime.now()
