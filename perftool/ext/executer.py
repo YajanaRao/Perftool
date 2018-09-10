@@ -76,8 +76,10 @@ class Logs():
 
 
 class ExecutionInfo():
-    def __init__(self):
+    def __init__(self,dir_path):
         self.start_time = datetime.now()
+        self.dir_path = dir_path
+        self.get_defaults()
 
     def get_logger(self):
         if self.report == "False":

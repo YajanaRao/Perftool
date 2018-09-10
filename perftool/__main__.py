@@ -45,11 +45,10 @@ if __name__ == '__main__':
                 #print(sys.version_info)
                 #from future.builtins import input
                 command = input(welcome.inputPrompt)
-
             else:
                 command = raw_input(welcome.inputPrompt)
 
-            if "break" in command:
+            if "break" or "exit" in command:
                 print("Exiting the application")
                 break
 
