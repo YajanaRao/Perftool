@@ -6,6 +6,9 @@ from os import path
 import sys
 import random
 
+import sys
+sys.path.insert(0, path.dirname(path.abspath(path.dirname(__file__))))
+
 class color:
     HEADER = '\033[95m'
     IMPORTANT = '\33[35m'
@@ -37,7 +40,10 @@ class welcome:
 
 #sys.path.append( path.dirname(path.abspath(path.dirname(__file__))) )
 
-sys.path.insert(0, path.dirname(path.abspath(path.dirname(__file__))))
+# sys.path.insert(0, path.dirname(path.abspath(path.dirname(__file__))))
+
+import sys
+print(sys.path)
 
 if __name__ == '__main__':
     if len(sys.argv) < 2:
@@ -49,9 +55,9 @@ if __name__ == '__main__':
                 #print(sys.version_info)
                 #from future.builtins import input
                 command = input(welcome.inputPrompt)
-
+                
             else:
-                command = raw_input(inputPrompt)
+                command = raw_input(welcome.inputPrompt)
 
             if "break" in command:
                 print("Exiting the application")

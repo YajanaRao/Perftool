@@ -8,9 +8,6 @@ import csv
 import threading
 import logging
 from colorlog import ColoredFormatter, getLogger
-
-sys.path.append('./reporter')
-
 from reporter.influxdbhandler import influx_writer
 from reporter.flaskapi import start_server,PerfData,stop_server
 
@@ -58,6 +55,9 @@ def get_interface():
         return "Ethernet"
     elif 'Wireless Network Connection' in counter:
         return 'Wireless Network Connection'
+
+    elif 'lo' in counter:
+        return 'lo'
 
 
 
