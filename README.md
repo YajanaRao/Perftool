@@ -74,4 +74,5 @@ Example
 	1. Clone the source code from github
 	2. cd to Perftool 
 	3. The the path in enviroment variable
-	4. Start executing
+	4. Run `pip install -r requirements.txt`
+	5. Start executing
