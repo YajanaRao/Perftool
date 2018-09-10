@@ -35,16 +35,6 @@ class welcome:
 
     inputPrompt = ">>"
 
-
-
-
-#sys.path.append( path.dirname(path.abspath(path.dirname(__file__))) )
-
-# sys.path.insert(0, path.dirname(path.abspath(path.dirname(__file__))))
-
-import sys
-print(sys.path)
-
 if __name__ == '__main__':
     if len(sys.argv) < 2:
         print(welcome.note)
@@ -55,7 +45,7 @@ if __name__ == '__main__':
                 #print(sys.version_info)
                 #from future.builtins import input
                 command = input(welcome.inputPrompt)
-                
+
             else:
                 command = raw_input(welcome.inputPrompt)
 
