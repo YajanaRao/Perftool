@@ -48,7 +48,7 @@ if __name__ == '__main__':
             else:
                 command = raw_input(welcome.inputPrompt)
 
-            if "break" or "exit" in command:
+            if "break" in command or "exit" in command:
                 print("Exiting the application")
                 break
 
