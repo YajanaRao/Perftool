@@ -40,6 +40,13 @@ Measure the time taken for the execution of system commands and record the perfo
 HTML, CSV reports are genearated at the end.
 Live reports can be seen on web by enabling live reporting feature mentioned above.
 
+## Technology Used
+  1. Flask API
+  2. Chart.js
+  3. D3.js
+  4. Influx DB 
+  5. Grafana
+
 ## Interactive console for instant report:
 
 ![alt text](https://raw.githubusercontent.com/YajanaRao/Perftool/b52d3533/site/images/console.PNG)
