@@ -64,7 +64,7 @@ Example
 [Default reporting](http://htmlpreview.github.io/?https://github.com/YajanaRao/Perftool/blob/master/site/2018-05-02_19-40-34/index.html)
 
 ### 2. Live reporting using Influx and Grafana
-If influx database is enabled in defaults.ini file, System and Process data will be pushed to the influx. Using grafana you can generate live reports
+If influx database is enabled in defaults.ini file, System and Process data will be pushed to the influx. Using grafana you can generate live reports. (Dashboard template is in resource folder)
 	
 Example
 ![alt text](https://raw.githubusercontent.com/YajanaRao/Perftool/master/site/images/grafana.png)
