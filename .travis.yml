@@ -5,4 +5,4 @@ script:
   - python perftool netstat 
   - python perftool "netstat -an"
   - python perftool netstat --report=False
-  - python perftool netstat --duration=60
+  - python perftool netstat --duration=1
