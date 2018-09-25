@@ -1,2 +1,4 @@
 language: python
 script: python perftool netstat 
+script: python perftool "netstat -an"
+script: python perftool netstat --report=False
