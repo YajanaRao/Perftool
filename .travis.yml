@@ -1,6 +1,7 @@
 language: python
 script: 
   - python perftool --help
+  - python perftool netstat --DEBUG
   - python perftool netstat 
   - python perftool "netstat -an"
   - python perftool netstat --report=False
